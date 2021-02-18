@@ -122,7 +122,6 @@ void generate_random_timeseries(int length, int number_of_timeseries,
     r = gsl_rng_alloc (T);// creates an instance of the Tausworthe generator
 
     FILE * data_file;
-    //data_file = fopen (filename,"wb");
     data_file = fopen (filename,"w");
 
     float *ts = (float *)(malloc(sizeof(float) * length));
@@ -133,12 +132,7 @@ void generate_random_timeseries(int length, int number_of_timeseries,
 
         for(rep=0; rep<repetition; rep++)
         {
-            //fwrite(ts, sizeof(float), length,data_file);
-
-            for(j=0; j<length; j++) {
-                fprintf (data_file,"%g ", ts[j]);
-            }
-            fprintf(data_file,"\n");
+            fwrite(ts, sizeof(float), length,data_file);
         }
 
         if(i % (1000 * repetition) == 0) {
@@ -175,7 +169,7 @@ int main(int argc, char **argv) {
         repetition = number_of_timeseries / (number_of_timeseries * (1-skew_frequency));
     else
         repetition = number_of_timeseries;
-    fprintf(stderr, ">> Generating random time series...\n");
+    fprintf(stderr, ">> Generating random time series...of size = %uKB each\n",sizeof(float)*256/1024);
     fprintf(stderr, ">> Data Filename: %s\n", filename);
     generate_random_timeseries(length, number_of_timeseries, normalize, repetition,filename);
     fprintf(stderr, ">> Done.\n");
